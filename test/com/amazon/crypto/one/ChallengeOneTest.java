@@ -6,6 +6,8 @@ package com.amazon.crypto.one;
 
 import com.czwief.crypto.one.HexUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,6 +20,8 @@ import org.junit.Test;
  * @author cody
  */
 public class ChallengeOneTest {
+    
+    private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     
     @Before
     public void setUp() {
@@ -71,7 +75,7 @@ public class ChallengeOneTest {
 
         Assert.assertEquals(
                 "746865206b696420646f6e277420706c6179",
-                HexUtils.xorHexStrings(hex, xorWith));
+                HexUtils.xorHexStrings(hex, xorWith).getHexString());
     }
     
     
@@ -91,14 +95,13 @@ public class ChallengeOneTest {
     @Test
     public void OnePointThreeTest() throws Exception {
         String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
         int topScore = -1;
         String topScoreString = null;
         
-        for (int i = 0; i < characters.length(); i++) {
-            String hexCharacter = Hex.encodeHexString(characters.subSequence(i, i+1).toString().getBytes());
-            String testString = HexUtils.xorHexStringsDifferentLength(hex, hexCharacter);
+        for (int i = 0; i < CHARACTERS.length(); i++) {
+            String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
+            String testString = HexUtils.xorHexStrings(hex, hexCharacter).getDisplayString();
            
             int score = StringScorer.scoreString(testString);
             if (score > topScore) {
@@ -107,6 +110,41 @@ public class ChallengeOneTest {
             }
         }
         Assert.assertEquals("Cooking MC's like", topScoreString);
+    }
+    
+    /**
+     * 1.4 Detect single-character XOR
+     * 
+     * One of the 60-character strings in this file has been encrypted by single-character XOR.
+     * Find it.
+     * (Your code from #3 should help.)
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void OnePointFourTest() throws Exception {
+        
+        BufferedReader br = new BufferedReader(new FileReader("static-content/one/4.txt"));
+        String line;
+        int topScore = -1;
+        String topScoreString = null;
+        while ((line = br.readLine()) != null) {
+            System.out.println("LINE =======" + line);
+            for (int i = 0; i < CHARACTERS.length(); i++) {
+                String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
+                String testString = HexUtils.xorHexStrings(line, hexCharacter).getDisplayString();
+           
+                int score = StringScorer.scoreString(testString);
+                if (score > topScore) {
+                    topScore = score;
+                    topScoreString = testString;
+                }
+                System.out.println("testString = " + testString + " and pts = " + score);
+            }
+       }
+       System.out.println("TopScore = " + topScoreString + " and score = " + topScore);
+        
+        Assert.assertEquals("Now that the pa", topScoreString);
     }
 
 }

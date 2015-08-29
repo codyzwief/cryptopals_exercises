@@ -23,22 +23,33 @@ public class HexUtils {
         return hexInfo.getBase64String();
     }
     
-    public static String xorHexStringsDifferentLength(final String longerString,
-            final String shorterString) {
-        //make sure the strings are the correct 
-        Assert.assertEquals(0, longerString.length() % shorterString.length());
-        StringBuilder sb = new StringBuilder();
+    /**
+     * XOR two Strings together that are String representations of hex.
+     * 
+     * If the strings are of different length, the longer string must be passed in as the first argument.
+     * 
+     * I'll refactor this later.
+     * 
+     * @param longerString
+     * @param shorterString
+     * @return 
+     */
+    public static HexEncodedString xorHexStrings(final String longerString, final String shorterString) {
+        //make sure the strings are the correct...for now
+        Assert.assertEquals("You must pad strings that have indivisible lengths: " + longerString.length() + " & " + shorterString.length(), 
+                0, longerString.length() % shorterString.length());
+        final StringBuilder sb = new StringBuilder();
         for(int i = 0; i < longerString.length() / shorterString.length(); i+= shorterString.length()) {
-            sb.append(xorHexStrings(longerString.substring(i, shorterString.length() + i), shorterString));
+            sb.append(produceXorString(longerString.substring(i, shorterString.length() + i), shorterString));
         }
-        return new HexEncodedString(sb.toString()).getDisplayString();
+        return new HexEncodedString(sb.toString());
     }
     
-    public static String xorHexStrings(final String string, final String xorWith) {
-        HexEncodedString hexInfo = new HexEncodedString(string);
-        HexEncodedString xorWithHexInfo = new HexEncodedString(xorWith);
-        byte[] hexBytes = hexInfo.getHexBytes();
-        byte[] xorWithByes = xorWithHexInfo.getHexBytes();
+    private static String produceXorString(final String string, final String xorWith) {
+        final HexEncodedString hexInfo = new HexEncodedString(string);
+        final HexEncodedString xorWithHexInfo = new HexEncodedString(xorWith);
+        final byte[] hexBytes = hexInfo.getHexBytes();
+        final byte[] xorWithByes = xorWithHexInfo.getHexBytes();
         Assert.assertEquals(hexBytes.length, xorWithByes.length);
         
         byte[] retVal = new byte[hexBytes.length];
