@@ -26,6 +26,16 @@ public class ChallengeOne {
         return hexInfo.getBase64String();
     }
     
+    public static String xorHexStringsDifferentLength(final String longerString,
+            final String shorterString) {
+        Assert.assertEquals(0, longerString.length() % shorterString.length());
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < longerString.length() / shorterString.length(); i+= shorterString.length()) {
+            sb.append(xorHexStrings(longerString.substring(i, shorterString.length() + i), shorterString));
+        }
+        return new HexEncodedString(sb.toString()).getDisplayString();
+    }
+    
     public static String xorHexStrings(final String string, final String xorWith) {
         HexEncodedString hexInfo = new HexEncodedString(string);
         HexEncodedString xorWithHexInfo = new HexEncodedString(xorWith);
@@ -39,7 +49,6 @@ public class ChallengeOne {
             retVal[i] = new Integer(hexBytes[i] ^ xorWithByes[i]).byteValue();
         }
         return Hex.encodeHexString(retVal);
-        
     }
     
 }

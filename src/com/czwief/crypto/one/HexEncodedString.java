@@ -35,4 +35,8 @@ public class HexEncodedString {
     public byte[] getHexBytes() {
         return encodedHex;
     }
+    
+    public String getDisplayString() {
+        return new String(getHexBytes());
+    }
 }

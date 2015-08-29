@@ -5,6 +5,7 @@
 package com.amazon.crypto.one;
 
 import com.czwief.crypto.one.ChallengeOne;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -48,6 +49,17 @@ public class ChallengeOneTest {
         Assert.assertEquals(
                 "746865206b696420646f6e277420706c6179",
                 ChallengeOne.xorHexStrings(hex, xorWith));
+    }
+    
+    @Test
+    public void OnePointThreeTest() throws Exception {
+        String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        for (int i = 0; i < characters.length(); i++) {
+            String hexCharacter = Hex.encodeHexString(characters.subSequence(i, i+1).toString().getBytes());
+            System.out.println(ChallengeOne.xorHexStringsDifferentLength(hex, hexCharacter));
+        }
     }
 
 }
