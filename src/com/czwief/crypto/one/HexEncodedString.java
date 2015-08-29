@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.czwief.crypto.one;
 
 import com.sun.org.apache.xml.internal.security.Init;
@@ -9,7 +5,8 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- *
+ * A simple wrapper around transitioning a hex string to a base64 encoded string.
+ * 
  * @author cody
  */
 public class HexEncodedString {
@@ -17,7 +14,7 @@ public class HexEncodedString {
     private final String hexString;
     private final String base64String;
     
-    public HexEncodedString(String hexString) {
+    public HexEncodedString(final String hexString) {
         Init.init();
         this.hexString = hexString;
         this.encodedHex = DatatypeConverter.parseHexBinary(hexString);

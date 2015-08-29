@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.czwief.crypto.one;
 
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
@@ -13,21 +9,23 @@ import org.apache.commons.codec.binary.Hex;
  *
  * @author cody
  */
-public class ChallengeOne {
+public class HexUtils {
     
     /**
+     * Turn a hex-formatted string into its Base64 representation.
      * 
-     * @param hex
-     * @return
+     * @param hexString a String in hexadecimal form (e.g. 4afb599d...)
+     * @return the string in Base64 encoded format
      * @throws Base64DecodingException 
      */
-    public static String hexToBase64(final String hex) throws Base64DecodingException {
-        HexEncodedString hexInfo = new HexEncodedString(hex);
+    public static String hexToBase64(final String hexString) {
+        final HexEncodedString hexInfo = new HexEncodedString(hexString);
         return hexInfo.getBase64String();
     }
     
     public static String xorHexStringsDifferentLength(final String longerString,
             final String shorterString) {
+        //make sure the strings are the correct 
         Assert.assertEquals(0, longerString.length() % shorterString.length());
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < longerString.length() / shorterString.length(); i+= shorterString.length()) {
