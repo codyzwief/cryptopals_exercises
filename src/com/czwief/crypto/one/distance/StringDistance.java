@@ -12,7 +12,7 @@ import junit.framework.Assert;
  */
 public class StringDistance {
     
-    public static int determineDistanceBetween(String one, String two) {
+    public static int determineDistanceBetween(final String one, final String two) {
         Assert.assertEquals("String do not have equal lengths", one.length(), two.length());
         int distance = 0;
         byte[] oneBytes = one.getBytes();

@@ -4,10 +4,13 @@
  */
 package com.amazon.crypto.one;
 
+import com.czwief.crypto.one.decryption.DecryptAttemptor;
 import com.czwief.crypto.one.distance.StringDistance;
 import com.czwief.crypto.one.encryption.DefaultEncryptor;
 import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.one.hex.Base64Utils;
 import com.czwief.crypto.one.hex.HexUtils;
+import com.czwief.crypto.one.hex.XorUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -54,7 +57,7 @@ public class ChallengeOneTest {
         
         Assert.assertEquals(
                 "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t",
-                HexUtils.hexToBase64(hex));
+                Base64Utils.toBase64(hex));
     }
     
     /**
@@ -98,20 +101,7 @@ public class ChallengeOneTest {
     @Test
     public void OnePointThreeTest() throws Exception {
         String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        
-        int topScore = -1;
-        String topScoreString = null;
-        
-        for (int i = 0; i < CHARACTERS.length(); i++) {
-            String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
-            String testString = HexUtils.xorHexStrings(hex, hexCharacter).getDisplayString();
-           
-            int score = StringScorer.scoreString(testString);
-            if (score > topScore) {
-                topScore = score;
-                topScoreString = testString;
-            }
-        }
+        String topScoreString = XorUtils.attemptSingleDecryption(hex);
         Assert.assertEquals("Cooking MC's like", topScoreString);
     }
     
@@ -199,14 +189,16 @@ public class ChallengeOneTest {
     public void OnePointSixTest() throws Exception {
         BufferedReader br = new BufferedReader(new FileReader("static-content/one/6.txt"));
         String line;
+        StringBuilder sb = new StringBuilder();
+        boolean shouldAppendNewline = false;
+        while ((line = br.readLine()) != null) {
+            if (shouldAppendNewline) {
+                sb.append("\n");
+            }
+            sb.append(line);
+            shouldAppendNewline = true;
+        }
         
-        final String KEY = "ICE";
-        final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
-        Encryptor encryptor = new DefaultEncryptor();
-        final String result = encryptor.encrypt(TEXT, KEY);
-        
-        final String expectedResult = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
-                 + "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
-        Assert.assertEquals(expectedResult, result);
+        System.out.println(new DecryptAttemptor().decrypt(sb.toString(), null));
     }
 }

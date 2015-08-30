@@ -22,39 +22,6 @@ public final class HexUtils {
     }
     
     /**
-     * Turn a hex-formatted string into its Base64 representation.
-     * 
-     * @param hexString a String in hexadecimal form (e.g. 4afb599d...)
-     * @return the string in Base64 encoded format
-     * @throws Base64DecodingException 
-     */
-    public static String hexToBase64(final String hexString) throws DecoderException {
-        final HexEncodedString hexInfo = new HexEncodedString(hexString);
-        return hexInfo.getBase64String();
-    }
-    
-    public static HexEncodedString encrypt(final String text, final String key)  throws DecoderException {
-        HexEncodedString textToEncrypt = new HexEncodedString(text.getBytes());
-        HexEncodedString keyToEncrypt = new HexEncodedString(key.getBytes());
-        
-        System.out.println("text = " + textToEncrypt.getHexString());
-        System.out.println("key = " + keyToEncrypt.getHexString());
-        
-        StringBuilder finalString = new StringBuilder();
-        
-        for (int i = 0; i < textToEncrypt.getHexString().length(); i+=2) {
-            String tempResult = textToEncrypt.getHexString().substring(i, i+2);
-            for (int j = 0; j < keyToEncrypt.getHexString().length(); j+=2) {
-                String tempKey = keyToEncrypt.getHexString().substring(j, j+2);
-                tempResult = xorHexStrings(tempResult, tempKey).getHexString();
-            }
-            finalString.append(tempResult);
-        }
-        
-        return new HexEncodedString(finalString.toString());
-    }
-    
-    /**
      * XOR two Strings together that are String representations of hex.
      * 
      * If the strings are of different length, the longer string must be passed in as the first argument.

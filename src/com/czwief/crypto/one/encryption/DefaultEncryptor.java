@@ -13,8 +13,8 @@ public class DefaultEncryptor implements Encryptor {
 
     @Override
     public String encrypt(String plaintext, String key) throws DecoderException {
-        HexEncodedString plaintextEncoded = HexEncodedStringGenerator.generate(plaintext);
-        HexEncodedString keyEncoded = HexEncodedStringGenerator.generate(key);
+        HexEncodedString plaintextEncoded = HexEncodedStringGenerator.generateFromPlaintext(plaintext);
+        HexEncodedString keyEncoded = HexEncodedStringGenerator.generateFromPlaintext(key);
         byte[] textHexBytes = plaintextEncoded.getHexBytes();
         byte[] keyHexBytes = keyEncoded.getHexBytes();
         StringBuilder sb = new StringBuilder();
