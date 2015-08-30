@@ -1,7 +1,9 @@
-package com.czwief.crypto.one;
+package com.czwief.crypto.one.hex;
 
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import java.nio.charset.Charset;
 import junit.framework.Assert;
+import org.apache.commons.codec.DecoderException;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -9,7 +11,15 @@ import org.apache.commons.codec.binary.Hex;
  *
  * @author cody
  */
-public class HexUtils {
+public final class HexUtils {
+    
+    public static String toHex(String str) {
+        return Hex.encodeHexString(str.getBytes(Charset.defaultCharset()));
+    }
+    
+    public static String toString(String hex) throws DecoderException {
+        return new String(Hex.decodeHex(hex.toCharArray()));
+    }
     
     /**
      * Turn a hex-formatted string into its Base64 representation.
@@ -18,9 +28,30 @@ public class HexUtils {
      * @return the string in Base64 encoded format
      * @throws Base64DecodingException 
      */
-    public static String hexToBase64(final String hexString) {
+    public static String hexToBase64(final String hexString) throws DecoderException {
         final HexEncodedString hexInfo = new HexEncodedString(hexString);
         return hexInfo.getBase64String();
+    }
+    
+    public static HexEncodedString encrypt(final String text, final String key)  throws DecoderException {
+        HexEncodedString textToEncrypt = new HexEncodedString(text.getBytes());
+        HexEncodedString keyToEncrypt = new HexEncodedString(key.getBytes());
+        
+        System.out.println("text = " + textToEncrypt.getHexString());
+        System.out.println("key = " + keyToEncrypt.getHexString());
+        
+        StringBuilder finalString = new StringBuilder();
+        
+        for (int i = 0; i < textToEncrypt.getHexString().length(); i+=2) {
+            String tempResult = textToEncrypt.getHexString().substring(i, i+2);
+            for (int j = 0; j < keyToEncrypt.getHexString().length(); j+=2) {
+                String tempKey = keyToEncrypt.getHexString().substring(j, j+2);
+                tempResult = xorHexStrings(tempResult, tempKey).getHexString();
+            }
+            finalString.append(tempResult);
+        }
+        
+        return new HexEncodedString(finalString.toString());
     }
     
     /**
@@ -34,7 +65,7 @@ public class HexUtils {
      * @param shorterString
      * @return 
      */
-    public static HexEncodedString xorHexStrings(final String longerString, final String shorterString) {
+    public static HexEncodedString xorHexStrings(final String longerString, final String shorterString) throws DecoderException {
         //make sure the strings are the correct...for now
         Assert.assertEquals("You must pad strings that have indivisible lengths: " + longerString.length() + " & " + shorterString.length(), 
                 0, longerString.length() % shorterString.length());
@@ -45,7 +76,7 @@ public class HexUtils {
         return new HexEncodedString(sb.toString());
     }
     
-    private static String produceXorString(final String string, final String xorWith) {
+    private static String produceXorString(final String string, final String xorWith) throws DecoderException {
         final HexEncodedString hexInfo = new HexEncodedString(string);
         final HexEncodedString xorWithHexInfo = new HexEncodedString(xorWith);
         final byte[] hexBytes = hexInfo.getHexBytes();
