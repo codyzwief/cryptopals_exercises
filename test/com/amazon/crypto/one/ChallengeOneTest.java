@@ -4,6 +4,7 @@
  */
 package com.amazon.crypto.one;
 
+import com.czwief.crypto.one.distance.StringDistance;
 import com.czwief.crypto.one.encryption.DefaultEncryptor;
 import com.czwief.crypto.one.encryption.Encryptor;
 import com.czwief.crypto.one.hex.HexUtils;
@@ -168,6 +169,37 @@ public class ChallengeOneTest {
      */
     @Test
     public void OnePointFiveTest() throws Exception {
+        final String KEY = "ICE";
+        final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
+        Encryptor encryptor = new DefaultEncryptor();
+        final String result = encryptor.encrypt(TEXT, KEY);
+        
+        final String expectedResult = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
+                 + "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
+        Assert.assertEquals(expectedResult, result);
+    }
+    
+    @Test
+    public void StringDistanceTest() {
+        String one = "this is a test";
+        String two = "wokka wokka!!!";
+        
+        Assert.assertEquals(37, StringDistance.determineDistanceBetween(one, two));
+    }
+    
+    /**
+     * 1.6 There's a file here. It's been base64'd after being encrypted with repeating-key XOR.
+     * Decrypt it.
+     * 
+     * http://cryptopals.com/sets/1/challenges/6/
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void OnePointSixTest() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader("static-content/one/6.txt"));
+        String line;
+        
         final String KEY = "ICE";
         final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
         Encryptor encryptor = new DefaultEncryptor();
