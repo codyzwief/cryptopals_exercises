@@ -28,7 +28,9 @@ public class DecryptAttemptor implements Decryptor {
      */
     @Override
     public String decrypt(String ciphertext, String key) throws DecoderException {
-        HexEncodedString cipherTextEncoded = HexEncodedStringGenerator.generateFromHex(Base64Utils.toHex(ciphertext));
+        System.out.println("CIPHER TEXT = " + Hex.encodeHexString(Base64Utils.decode(ciphertext)));
+        HexEncodedString cipherTextEncoded = new HexEncodedString(Base64Utils.decode(ciphertext));
+        
         
         //1. Since we're ignoring the key, attempt to figure out the key.
         // Do this by determining a keysize
@@ -36,8 +38,6 @@ public class DecryptAttemptor implements Decryptor {
         Assert.assertEquals("Key size of " + keySize + " should be even.", 0, keySize % 2);
         
         //2. Break the ciphertext into blocks of KEYSIZE each.
-        
-        
         int tempIndex = 0;
         final byte[] cipherTextBytes = cipherTextEncoded.getHexBytes();
         Integer temp = (int) Math.ceil((double) cipherTextBytes.length / (double) keySize);

@@ -9,7 +9,6 @@ import com.czwief.crypto.one.distance.StringDistance;
 import com.czwief.crypto.one.encryption.DefaultEncryptor;
 import com.czwief.crypto.one.encryption.Encryptor;
 import com.czwief.crypto.one.hex.Base64Utils;
-import com.czwief.crypto.one.hex.HexUtils;
 import com.czwief.crypto.one.hex.XorUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
 import java.io.BufferedReader;
@@ -81,7 +80,7 @@ public class ChallengeOneTest {
 
         Assert.assertEquals(
                 "746865206b696420646f6e277420706c6179",
-                HexUtils.xorHexStrings(hex, xorWith).getHexString());
+                XorUtils.xorHexStrings(hex, xorWith).getHexString());
     }
     
     
@@ -102,7 +101,7 @@ public class ChallengeOneTest {
     public void OnePointThreeTest() throws Exception {
         String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
         String topScoreString = XorUtils.attemptSingleDecryption(hex);
-        Assert.assertEquals("Cooking MC's like", topScoreString);
+        Assert.assertEquals("Cooking MC's like a pound of bacon", topScoreString);
     }
     
     /**
@@ -124,7 +123,7 @@ public class ChallengeOneTest {
         while ((line = br.readLine()) != null) {
             for (int i = 0; i < CHARACTERS.length(); i++) {
                 String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
-                String testString = HexUtils.xorHexStrings(line, hexCharacter).getDisplayString();
+                String testString = XorUtils.xorHexStrings(line, hexCharacter).getDisplayString();
            
                 int score = StringScorer.scoreString(testString);
                 if (score > topScore) {
@@ -133,7 +132,7 @@ public class ChallengeOneTest {
                 }
             }
         }
-        Assert.assertEquals("Now that the pa", topScoreString);
+        Assert.assertEquals("Now that the party is jumping\n", topScoreString);
     }
     
     
@@ -190,15 +189,11 @@ public class ChallengeOneTest {
         BufferedReader br = new BufferedReader(new FileReader("static-content/one/6.txt"));
         String line;
         StringBuilder sb = new StringBuilder();
-        boolean shouldAppendNewline = false;
         while ((line = br.readLine()) != null) {
-            if (shouldAppendNewline) {
-                sb.append("\n");
-            }
             sb.append(line);
-            shouldAppendNewline = true;
         }
         
-        System.out.println(new DecryptAttemptor().decrypt(sb.toString(), null));
+        System.out.println("BASE STRING = " + sb.toString());
+        System.out.println("RESULT = " + new DecryptAttemptor().decrypt(sb.toString(), null));
     }
 }

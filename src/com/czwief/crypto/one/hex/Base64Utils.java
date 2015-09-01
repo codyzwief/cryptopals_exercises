@@ -28,4 +28,8 @@ public final class Base64Utils {
     public static String toHex(final String base64) {
         return Hex.encodeHexString(Base64.decode(base64));
     }
+    
+    public static byte[] decode(final String base64) {
+        return Base64.decode(base64);
+    }
 }
