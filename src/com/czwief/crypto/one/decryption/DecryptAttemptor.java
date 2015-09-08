@@ -1,5 +1,6 @@
 package com.czwief.crypto.one.decryption;
 
+import com.czwief.crypto.one.encryption.DefaultEncryptor;
 import com.czwief.crypto.one.hex.Base64Utils;
 import com.czwief.crypto.one.hex.HexEncodedString;
 import com.czwief.crypto.one.hex.HexEncodedStringGenerator;
@@ -17,6 +18,7 @@ import org.apache.commons.codec.binary.Hex;
 public class DecryptAttemptor implements Decryptor {
     
     DefaultDecryptor decryptor = new DefaultDecryptor();
+    DefaultEncryptor encryptor = new DefaultEncryptor();
 
     /**
      * Decrypt the ciphertext as specified in 1.6. This ignores the key.
@@ -36,23 +38,23 @@ public class DecryptAttemptor implements Decryptor {
         
         //1. Since we're ignoring the key, attempt to figure out the key.
         // Do this by determining a keysize
-        //Integer keySize = KeyFinder.findKeySize(cipherTextEncoded);
+        Integer keySize = KeyFinder.findKeySize(cipherTextEncoded);
         //Assert.assertEquals("Key size of " + keySize + " should be even.", 0, keySize % 2);
-        //System.out.println("KEYSIZE IS = " + keySize);
+        System.out.println("KEYSIZE IS = " + keySize);
         
         //2. Break the ciphertext into blocks of KEYSIZE each.
         
-        for (int singleKeySize = 2; singleKeySize < 41; singleKeySize++) {
+        //for (int singleKeySize = 2; singleKeySize < 41; singleKeySize++) {
         
         int tempIndex = 0;
         final byte[] cipherTextBytes = cipherTextEncoded.getDisplayStringBytes();
-        Integer temp = (int) Math.ceil((double) cipherTextBytes.length / (double) singleKeySize);
-        byte[][] blocks = new byte[temp][singleKeySize];
+        Integer temp = (int) Math.ceil((double) cipherTextBytes.length / (double) keySize);
+        byte[][] blocks = new byte[temp][keySize];
         for (int i = 0; i < cipherTextBytes.length; i++) {
-            if (tempIndex >= singleKeySize) {
+            if (tempIndex >= keySize) {
                 tempIndex = 0;
             }
-            blocks[i / singleKeySize][tempIndex++] = cipherTextBytes[i];
+            blocks[i / keySize][tempIndex++] = cipherTextBytes[i];
         }
         
         //3. Transpose the blocks... make each block the first byte of each block
@@ -63,20 +65,8 @@ public class DecryptAttemptor implements Decryptor {
             sb.append(XorUtils.attemptSingleDecryption(Hex.encodeHexString(blocks[i]), true));
         }
         
-        System.out.println("================================================");
-        System.out.println("KEYSIZE = " + singleKeySize + " and key = " + sb.toString());
-        System.out.println("================================================");
-        
         String result = decryptor.decrypt(cipherTextEncoded.getHexString(), sb.toString());
-        HexEncodedString resultAsBag = HexEncodedStringGenerator.generateFromHex(result);
-        
-        System.out.println("RESULT = " + resultAsBag.getDisplayString());
-        System.out.println("================================================");
-        
-        
-        }
-        //return sb.toString();
-        return "";
+        return result;
     }
     
     private byte[][] transpose(final byte[][] originalMatrix) {
@@ -89,6 +79,11 @@ public class DecryptAttemptor implements Decryptor {
         }
         
         return retVal;
+    }
+
+    @Override
+    public String decrypt(byte[] ciphertext, String key) throws DecoderException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

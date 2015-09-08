@@ -14,7 +14,7 @@ public class DefaultDecryptor implements Decryptor {
 
     @Override
     public String decrypt(String ciphertext, String key) throws DecoderException {
-        HexEncodedString plaintextEncoded = HexEncodedStringGenerator.generateFromPlaintext(ciphertext);
+        HexEncodedString plaintextEncoded = HexEncodedStringGenerator.generateFromHex(ciphertext);
         HexEncodedString keyEncoded = HexEncodedStringGenerator.generateFromPlaintext(key);
         byte[] textHexBytes = plaintextEncoded.getHexBytes();
         byte[] keyHexBytes = keyEncoded.getHexBytes();
@@ -22,11 +22,16 @@ public class DefaultDecryptor implements Decryptor {
         
         for (int i = 0; i < textHexBytes.length; i++) {
             byte singleByte = (byte) (textHexBytes[i] ^ keyHexBytes[i % keyHexBytes.length]);
-            sb.append(DatatypeConverter.printHexBinary(new byte[]{singleByte}));
+            sb.append(new String(new byte[]{singleByte}));
         }
         
-        return sb.toString().toLowerCase();
+        return sb.toString();
         
+    }
+
+    @Override
+    public String decrypt(byte[] ciphertext, String key) throws DecoderException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

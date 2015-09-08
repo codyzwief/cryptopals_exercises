@@ -10,4 +10,6 @@ public interface Decryptor {
     
     String decrypt(String ciphertext, String key) throws DecoderException;
     
+    String decrypt(byte[] ciphertext, String key) throws DecoderException;
+    
 }

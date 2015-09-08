@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amazon.crypto.one;
+package com.czwief.crypto.one;
 
+import com.czwief.crypto.one.decryption.AESDecryptor;
 import com.czwief.crypto.one.decryption.DecryptAttemptor;
 import com.czwief.crypto.one.distance.StringDistance;
 import com.czwief.crypto.one.encryption.DefaultEncryptor;
@@ -11,6 +12,7 @@ import com.czwief.crypto.one.encryption.Encryptor;
 import com.czwief.crypto.one.hex.Base64Utils;
 import com.czwief.crypto.one.hex.XorUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import org.apache.commons.codec.binary.Hex;
@@ -27,6 +29,8 @@ import org.junit.Test;
 public class ChallengeOneTest {
     
     private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    
+    private final AESDecryptor aesDecryptor = new AESDecryptor();
     
     @Before
     public void setUp() {
@@ -193,8 +197,25 @@ public class ChallengeOneTest {
             sb.append(line);
         }
         
-        System.out.println("BASE STRING = " + sb.toString());
-        String result = new DecryptAttemptor().decrypt(sb.toString(), null);
-        System.out.println("RESULT = " + result);
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, new DecryptAttemptor().decrypt(sb.toString(), null));
+    }
+    
+    /**
+     * 1.7 The Base64-encoded content in this file has been encrypted via AES-128 in ECB mode under the keyb "YELLOW SUBMARINE".
+     * (case-sensitive, without the quotes; exactly 16 characters; I like "YELLOW SUBMARINE" because it's exactly 16 bytes long, and now you do too).
+     * 
+     * Decrypt it. You know the key, after all.
+     * 
+     * Easiest way: use OpenSSL::Cipher and give it AES-128-ECB as the cipher.
+     */
+    @Test
+    public void OnePointSevenTest() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader("static-content/one/7.txt"));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
     }
 }
