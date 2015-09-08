@@ -47,6 +47,10 @@ public class HexEncodedString {
         return encodedHexBytes;
     }
     
+    public byte[] getDisplayStringBytes() {
+        return displayStringBytes;
+    }
+    
     public String getDisplayString() {
         return displayString;
     }

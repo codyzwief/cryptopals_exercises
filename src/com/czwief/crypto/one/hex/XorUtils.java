@@ -15,23 +15,28 @@ import org.apache.commons.codec.binary.Hex;
  */
 public class XorUtils {
     
-    private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    //private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     
-    public static String attemptSingleDecryption(final String hexToDecode) throws DecoderException {
+    public static String attemptSingleDecryption(final String hexToDecode, final boolean shouldReturnKeyInstead) throws DecoderException {
         int topScore = -1;
         String topScoreString = null;
+        int bestKey = Integer.MIN_VALUE;
         
-        for (int i = 0; i < CHARACTERS.length(); i++) {
-            String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
+        for (int i = 0; i < 128; i++) {
+            //Character.
+            byte[] hexCharacter = Character.toString((char) i).getBytes();//Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
             String testString = xorHexStrings(hexToDecode, hexCharacter).getDisplayString();
            
             int score = StringScorer.scoreString(testString);
             if (score > topScore) {
                 topScore = score;
                 topScoreString = testString;
+                bestKey = i;
             }
         }
-        
+        if (shouldReturnKeyInstead) {
+            return Character.toString((char) bestKey);
+        }
         return topScoreString;
     }
     
@@ -55,7 +60,16 @@ public class XorUtils {
         final byte[] xorWithBytes = xorWithHexInfo.getHexBytes();
         
         return new HexEncodedString(Hex.encodeHexString(xorBytes(hexBytes, xorWithBytes, true)));
+    }
+    
+    public static HexEncodedString xorHexStrings(final String longerString, final byte[] shorterString) throws DecoderException {
         
+        final HexEncodedString hexInfo = new HexEncodedString(longerString);
+        final HexEncodedString xorWithHexInfo = new HexEncodedString(shorterString);
+        final byte[] hexBytes = hexInfo.getHexBytes();
+        final byte[] xorWithBytes = xorWithHexInfo.getHexBytes();
+        
+        return new HexEncodedString(Hex.encodeHexString(xorBytes(hexBytes, xorWithBytes, true)));
     }  
     
     private static byte[] xorBytes(byte[] first, byte[] second, boolean shouldWrap) {

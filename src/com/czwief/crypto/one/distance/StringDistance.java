@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.czwief.crypto.one.distance;
 
 import junit.framework.Assert;
@@ -14,13 +10,14 @@ public class StringDistance {
     
     public static int determineDistanceBetween(final String one, final String two) {
         Assert.assertEquals("String do not have equal lengths", one.length(), two.length());
+        return determineDistanceBetween(one.getBytes(), two.getBytes());
+    }
+    
+    public static int determineDistanceBetween(final byte[] one, final byte[] two) {
         int distance = 0;
-        byte[] oneBytes = one.getBytes();
-        byte[] twoBytes = two.getBytes();
-        for (int i = 0; i < oneBytes.length; i++) {
-            distance += Integer.bitCount(oneBytes[i] ^ twoBytes[i]);
+        for (int i = 0; i < one.length; i++) {
+            distance += Integer.bitCount(one[i] ^ two[i]);
         }
-        
         return distance;
     }
     

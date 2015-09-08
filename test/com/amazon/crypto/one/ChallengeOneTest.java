@@ -100,7 +100,7 @@ public class ChallengeOneTest {
     @Test
     public void OnePointThreeTest() throws Exception {
         String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        String topScoreString = XorUtils.attemptSingleDecryption(hex);
+        String topScoreString = XorUtils.attemptSingleDecryption(hex, false);
         Assert.assertEquals("Cooking MC's like a pound of bacon", topScoreString);
     }
     
@@ -194,6 +194,7 @@ public class ChallengeOneTest {
         }
         
         System.out.println("BASE STRING = " + sb.toString());
-        System.out.println("RESULT = " + new DecryptAttemptor().decrypt(sb.toString(), null));
+        String result = new DecryptAttemptor().decrypt(sb.toString(), null);
+        System.out.println("RESULT = " + result);
     }
 }
