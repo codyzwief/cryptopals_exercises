@@ -1,15 +1,17 @@
 package com.czwief.crypto.one.decryption;
 
-import org.apache.commons.codec.DecoderException;
-
 /**
  *
  * @author cody
  */
 public interface Decryptor {
     
-    String decrypt(String ciphertext, String key) throws DecoderException;
-    
-    String decrypt(byte[] ciphertext, String key) throws DecoderException;
-    
+    /**
+     * Decrypt a piece of cipher text with the given key.
+     * 
+     * @param ciphertext
+     * @param key TODO refactor everything to be just byte arrays
+     * @return 
+     */
+    String decrypt(byte[] ciphertext, String key); 
 }

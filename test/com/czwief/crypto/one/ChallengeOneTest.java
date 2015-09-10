@@ -1,21 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.czwief.crypto.one;
 
-import com.czwief.crypto.one.decryption.AESDecryptor;
 import com.czwief.crypto.one.decryption.DecryptAttemptor;
+import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptor;
+import com.czwief.crypto.one.decryption.impl.DefaultDecryptAttemptor;
+import com.czwief.crypto.one.decryption.impl.DefaultDecryptor;
 import com.czwief.crypto.one.distance.StringDistance;
-import com.czwief.crypto.one.encryption.DefaultEncryptor;
+import com.czwief.crypto.one.encryption.impl.DefaultEncryptor;
 import com.czwief.crypto.one.encryption.Encryptor;
-import com.czwief.crypto.one.hex.Base64Utils;
-import com.czwief.crypto.one.hex.XorUtils;
+import com.czwief.crypto.utils.Base64Utils;
+import com.czwief.crypto.utils.XorUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
+import com.czwief.crypto.utils.HexUtils;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,10 +26,8 @@ import org.junit.Test;
  * @author cody
  */
 public class ChallengeOneTest {
-    
-    private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-    
-    private final AESDecryptor aesDecryptor = new AESDecryptor();
+        
+    private final AESWithECBDecryptor aesDecryptor = new AESWithECBDecryptor();
     
     @Before
     public void setUp() {
@@ -79,12 +76,12 @@ public class ChallengeOneTest {
      */
     @Test
     public void OnePointTwoTest() throws Exception {
-        String hex = "1c0111001f010100061a024b53535009181c";
-        String xorWith = "686974207468652062756c6c277320657965";
+        final String hex = "1c0111001f010100061a024b53535009181c";
+        final String xorWith = "686974207468652062756c6c277320657965";
 
         Assert.assertEquals(
                 "746865206b696420646f6e277420706c6179",
-                XorUtils.xorHexStrings(hex, xorWith).getHexString());
+                HexUtils.xorHexStrings(hex, xorWith));
     }
     
     
@@ -92,7 +89,7 @@ public class ChallengeOneTest {
      * 1.3. Single-byte XOR cipher
      * 
      * The hex encoded string: 1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736
-     * has been XOR'd against a single character. Find the key, decrypt the message.
+     * has been XOR'd against a single character. Find the key, attemptDecryption the message.
      * 
      * You can do this by hand. But don't: write code to do it for you.
      * 
@@ -103,8 +100,8 @@ public class ChallengeOneTest {
      */
     @Test
     public void OnePointThreeTest() throws Exception {
-        String hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        String topScoreString = XorUtils.attemptSingleDecryption(hex, false);
+        final byte[] hex = HexUtils.toByteArray("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
+        final String topScoreString = XorUtils.attemptSingleDecryption(hex, false);
         Assert.assertEquals("Cooking MC's like a pound of bacon", topScoreString);
     }
     
@@ -125,15 +122,12 @@ public class ChallengeOneTest {
         int topScore = -1;
         String topScoreString = null;
         while ((line = br.readLine()) != null) {
-            for (int i = 0; i < CHARACTERS.length(); i++) {
-                String hexCharacter = Hex.encodeHexString(CHARACTERS.subSequence(i, i+1).toString().getBytes());
-                String testString = XorUtils.xorHexStrings(line, hexCharacter).getDisplayString();
-           
-                int score = StringScorer.scoreString(testString);
-                if (score > topScore) {
-                    topScore = score;
-                    topScoreString = testString;
-                }
+            byte[] encodedLine = HexUtils.toByteArray(line);
+            String singleString = XorUtils.attemptSingleDecryption(encodedLine, false);
+            int score = StringScorer.scoreString(singleString);
+            if (score > topScore) {
+                topScore = score;
+                topScoreString = singleString;
             }
         }
         Assert.assertEquals("Now that the party is jumping\n", topScoreString);
@@ -167,16 +161,13 @@ public class ChallengeOneTest {
         Encryptor encryptor = new DefaultEncryptor();
         final String result = encryptor.encrypt(TEXT, KEY);
         
-        final String expectedResult = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
-                 + "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
-        Assert.assertEquals(expectedResult, result);
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_FIVE, result);
     }
     
     @Test
     public void StringDistanceTest() {
         String one = "this is a test";
         String two = "wokka wokka!!!";
-        
         Assert.assertEquals(37, StringDistance.determineDistanceBetween(one, two));
     }
     
@@ -190,6 +181,10 @@ public class ChallengeOneTest {
      */
     @Test
     public void OnePointSixTest() throws Exception {
+        
+        DecryptAttemptor defaultDecryptAttemptor = new DefaultDecryptAttemptor();
+        Decryptor defaultDecryptor = new DefaultDecryptor();
+        
         BufferedReader br = new BufferedReader(new FileReader("static-content/one/6.txt"));
         String line;
         StringBuilder sb = new StringBuilder();
@@ -197,7 +192,10 @@ public class ChallengeOneTest {
             sb.append(line);
         }
         
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, new DecryptAttemptor().decrypt(sb.toString(), null));
+        final byte[] cipherTextData = Base64Utils.decode(sb.toString());
+        
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, 
+                defaultDecryptAttemptor.attemptDecryption(cipherTextData, defaultDecryptor));
     }
     
     /**
@@ -211,6 +209,25 @@ public class ChallengeOneTest {
     @Test
     public void OnePointSevenTest() throws Exception {
         BufferedReader br = new BufferedReader(new FileReader("static-content/one/7.txt"));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
+    }
+    
+    /**
+     * 1.8 In this file are a bunch of hex-encoded ciphertexts.
+     * 
+     * One of them has been encrypted with ECB. Detect it.
+     * 
+     * Remember that the problem with ECB is that it is stateless and deterministic; 
+     * the same 16 byte plaintext block will always produce the same 16 byte ciphertext.
+     */
+    @Test
+    public void OnePointEightTest() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader("static-content/one/8.txt"));
         String line;
         StringBuilder sb = new StringBuilder();
         while ((line = br.readLine()) != null) {

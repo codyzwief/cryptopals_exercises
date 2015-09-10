@@ -6,6 +6,9 @@ package com.czwief.crypto.one;
  */
 public class ChallengeOneAnswers {
     
+    public static final String ONE_POINT_FIVE = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
+                 + "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
+    
     public static final String ONE_POINT_SIX = "I'm back and I'm ringin' the bell \n"
             + "A rockin' on the mike while the fly girls yell \n"
             + "In ecstasy in the back of me \n"
@@ -75,5 +78,5 @@ public class ChallengeOneAnswers {
             + "Play that funky music, white boy Come on, Come on, Come on \n"
             + "Play that funky music \n"; 
     
-    public static final String ONE_POINT_SEVEN = "I'm back and I'm ringin' the bell \nA rockin' on the mike while the fly girls yell ";
+    public static final String ONE_POINT_SEVEN = ONE_POINT_SIX;
 }

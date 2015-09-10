@@ -8,6 +8,8 @@ import java.util.Map;
  * 
  * This doesn't really do anything complicated.
  * 
+ * TODO: Better support for the capitalization patterns of words/phrases.
+ * 
  * @author cody
  */
 public class StringScorer {
@@ -47,9 +49,9 @@ public class StringScorer {
         final String lowerCaseStringToScore = stringToScore.toLowerCase();
         int stringScore = 0;
         for (int i = 0; i < lowerCaseStringToScore.length(); i++) {
-            char s = lowerCaseStringToScore.charAt(i);
-            if (LETTER_FREQUENCIES.containsKey(s)) {
-                stringScore += LETTER_FREQUENCIES.get(s);
+            char singleCharacter = lowerCaseStringToScore.charAt(i);
+            if (LETTER_FREQUENCIES.containsKey(singleCharacter)) {
+                stringScore += LETTER_FREQUENCIES.get(singleCharacter);
             }
         }
         return stringScore;

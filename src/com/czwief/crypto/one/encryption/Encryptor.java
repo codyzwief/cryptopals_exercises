@@ -1,17 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.czwief.crypto.one.encryption;
 
-import org.apache.commons.codec.DecoderException;
-
 /**
- *
+ * Encrypt a given piece of plaintext with a given key.
+ * 
  * @author cody
  */
 public interface Encryptor {
     
-    String encrypt(String plaintext, String key) throws DecoderException;
+    String encrypt(String plaintext, String key);
     
 }
