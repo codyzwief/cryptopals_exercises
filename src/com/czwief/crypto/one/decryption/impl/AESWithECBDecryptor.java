@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 public class AESWithECBDecryptor implements Decryptor {
     
-    private static final String ALGORITHM = "AES/ECB/NoPadding";
+    private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
 
     @Override
     public String decrypt(final byte[] ciphertext, final String key) {
