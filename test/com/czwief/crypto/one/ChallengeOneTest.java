@@ -2,6 +2,7 @@ package com.czwief.crypto.one;
 
 import com.czwief.crypto.one.decryption.DecryptAttemptor;
 import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptAttemptor;
 import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptor;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptAttemptor;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptor;
@@ -15,6 +16,8 @@ import com.czwief.crypto.utils.HexUtils;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -214,7 +217,9 @@ public class ChallengeOneTest {
         while ((line = br.readLine()) != null) {
             sb.append(line);
         }
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
+        
+        String result = aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE");
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
     }
     
     /**
@@ -227,12 +232,14 @@ public class ChallengeOneTest {
      */
     @Test
     public void OnePointEightTest() throws Exception {
+        DecryptAttemptor defaultDecryptAttemptor = new AESWithECBDecryptAttemptor();
+        
         BufferedReader br = new BufferedReader(new FileReader("static-content/one/8.txt"));
         String line;
-        StringBuilder sb = new StringBuilder();
+        List<String> hexStrings = new ArrayList<>();
         while ((line = br.readLine()) != null) {
-            sb.append(line);
+            hexStrings.add(line);
         }
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_EIGHT, XorUtils.determineAESWithECB(hexStrings, 16));
     }
 }
