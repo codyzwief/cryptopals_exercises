@@ -4,14 +4,20 @@ import com.czwief.crypto.one.encryption.Encryptor;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- * Encrypts a string using a default method of simply XORing the plaintext
- * together with the key.
+ * Encrypts a string using a random IV in CBC mode.
+ * 
+ * Instead of using Java's built-in implementations, we're doing this ourselves.
+ * As exercise 2.10 says, "what's the point of doing this stuff if you're not
+ * going to learn from it?"
+ * 
+ * Decryption notwithstanding...
  * 
  * @author cody
  */
-public class DefaultEncryptor implements Encryptor {
+public class AESWithCBCEncryptor implements Encryptor {
 
     @Override
+    //TODO Implement...
     public String encrypt(String plaintext, String key, String iv) {
         final byte[] textHexBytes = plaintext.getBytes();
         final byte[] keyHexBytes = key.getBytes();

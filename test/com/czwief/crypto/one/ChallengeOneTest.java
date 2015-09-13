@@ -3,7 +3,7 @@ package com.czwief.crypto.one;
 import com.czwief.crypto.one.decryption.DecryptAttemptor;
 import com.czwief.crypto.one.decryption.Decryptor;
 import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptAttemptor;
-import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptor;
+import com.czwief.crypto.one.decryption.impl.GenericDecryptor;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptAttemptor;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptor;
 import com.czwief.crypto.one.distance.StringDistance;
@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 public class ChallengeOneTest {
         
-    private final AESWithECBDecryptor aesDecryptor = new AESWithECBDecryptor();
+    private final GenericDecryptor aesDecryptor = new GenericDecryptor("AES/ECB/PKCS5Padding");
     
     @Before
     public void setUp() {
@@ -162,7 +162,7 @@ public class ChallengeOneTest {
         final String KEY = "ICE";
         final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
         Encryptor encryptor = new DefaultEncryptor();
-        final String result = encryptor.encrypt(TEXT, KEY);
+        final String result = encryptor.encrypt(TEXT, KEY, null);
         
         Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_FIVE, result);
     }
