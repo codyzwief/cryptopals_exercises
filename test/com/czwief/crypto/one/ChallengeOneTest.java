@@ -3,7 +3,7 @@ package com.czwief.crypto.one;
 import com.czwief.crypto.one.decryption.DecryptAttemptor;
 import com.czwief.crypto.one.decryption.Decryptor;
 import com.czwief.crypto.one.decryption.impl.AESWithECBDecryptAttemptor;
-import com.czwief.crypto.one.decryption.impl.GenericDecryptor;
+import com.czwief.crypto.one.decryption.impl.GenericEncryptionUtility;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptAttemptor;
 import com.czwief.crypto.one.decryption.impl.DefaultDecryptor;
 import com.czwief.crypto.one.distance.StringDistance;
@@ -12,6 +12,7 @@ import com.czwief.crypto.one.encryption.Encryptor;
 import com.czwief.crypto.utils.Base64Utils;
 import com.czwief.crypto.utils.XorUtils;
 import com.czwief.crypto.one.scorer.StringScorer;
+import com.czwief.crypto.utils.EncryptionMode;
 import com.czwief.crypto.utils.HexUtils;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ import org.junit.Test;
  */
 public class ChallengeOneTest {
         
-    private final GenericDecryptor aesDecryptor = new GenericDecryptor("AES/ECB/PKCS5Padding");
+    private final GenericEncryptionUtility aesDecryptor = new GenericEncryptionUtility("AES/ECB/PKCS5Padding", EncryptionMode.DECRYPT);
     
     @Before
     public void setUp() {
@@ -162,7 +163,7 @@ public class ChallengeOneTest {
         final String KEY = "ICE";
         final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
         Encryptor encryptor = new DefaultEncryptor();
-        final String result = encryptor.encrypt(TEXT, KEY, null);
+        final String result = new String(encryptor.encrypt(TEXT, KEY, null));
         
         Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_FIVE, result);
     }
@@ -218,8 +219,8 @@ public class ChallengeOneTest {
             sb.append(line);
         }
         
-        String result = aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE");
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
+        String result = new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE")));
     }
     
     /**

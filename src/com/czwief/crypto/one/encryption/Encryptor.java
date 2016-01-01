@@ -7,6 +7,6 @@ package com.czwief.crypto.one.encryption;
  */
 public interface Encryptor {
     
-    String encrypt(String plaintext, String key, String iv);
+    byte[] encrypt(String plaintext, String key, String iv);
     
 }

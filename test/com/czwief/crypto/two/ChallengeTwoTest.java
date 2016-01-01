@@ -2,11 +2,11 @@ package com.czwief.crypto.two;
 
 import com.czwief.crypto.one.ChallengeOneAnswers;
 import com.czwief.crypto.one.decryption.Decryptor;
-import com.czwief.crypto.one.decryption.impl.GenericDecryptor;
+import com.czwief.crypto.one.decryption.impl.GenericEncryptionUtility;
 import com.czwief.crypto.one.encryption.Encryptor;
-import com.czwief.crypto.one.encryption.impl.AESWithCBCEncryptor;
 import com.czwief.crypto.two.padding.PKCS7Padder;
 import com.czwief.crypto.utils.Base64Utils;
+import com.czwief.crypto.utils.EncryptionMode;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import org.junit.Assert;
@@ -41,6 +41,12 @@ public class ChallengeTwoTest {
         
         Assert.assertEquals("YELLOW SUBMARINE\u0004\u0004\u0004\u0004",
                 new String(PKCS7Padder.PKCS7Pad(key, 20)));
+        
+        Assert.assertEquals("YELLOW SUBMARINE\u0002\u0002",
+                new String(PKCS7Padder.PKCS7Pad(key, 18)));
+        
+        Assert.assertEquals("YELLOW SUBMARINE",
+                new String(PKCS7Padder.PKCS7Pad(key, 16)));
     }
     
     /**
@@ -64,7 +70,7 @@ public class ChallengeTwoTest {
      */
     @Test
     public void TwoPointTwoTest() throws Exception {
-        Decryptor cbcDecryptor = new GenericDecryptor("AES/CBC/PKCS5Padding");
+        Decryptor cbcDecryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
         String key = "YELLOW SUBMARINE";
         BufferedReader br = new BufferedReader(new FileReader("static-content/two/10.txt"));
         String line;
@@ -74,7 +80,7 @@ public class ChallengeTwoTest {
         }
         
         Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, 
-                cbcDecryptor.decrypt(Base64Utils.decode(sb.toString()), key));
+                new String(cbcDecryptor.decrypt(Base64Utils.decode(sb.toString()), key)));
     }
     
     /**
@@ -89,13 +95,15 @@ public class ChallengeTwoTest {
     public void TwoPointTwoTest_TestEncryptionAndDecryption() throws Exception {
         String plainText = ChallengeOneAnswers.ONE_POINT_SIX;
         String IV = new String(new byte[16]);
-        Encryptor cbcEncryptor = new AESWithCBCEncryptor();
-        Decryptor cbcDecryptor = new GenericDecryptor("AES/CBC/PKCS5Padding");
+        Encryptor cbcEncryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.ENCRYPT);
+        Decryptor cbcDecryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
         String key = "YELLOW SUBMARINE";
         
-        String encrypted = cbcEncryptor.encrypt(plainText, key, IV);
-        String decrypted = cbcDecryptor.decrypt(encrypted.getBytes(), key);
+        byte[] encrypted = cbcEncryptor.encrypt(plainText, key, IV);
+        //String encrypted = cbcEncryptor.encrypt(plainText, key, IV);
+        byte[] decrypted = cbcDecryptor.decrypt(encrypted, key);
+        //String decrypted = cbcDecryptor.decrypt(PKCS7Padder.PKCS7Pad(encrypted.getBytes(), 16), new String(PKCS7Padder.PKCS7Pad(key.getBytes(), 16)));
         
-        Assert.assertEquals(plainText, decrypted);
+        Assert.assertEquals(plainText, new String(decrypted));
     }
 }

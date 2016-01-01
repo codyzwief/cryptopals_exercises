@@ -1,6 +1,8 @@
 package com.czwief.crypto.one.decryption.impl;
 
 import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.utils.EncryptionMode;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -19,12 +21,13 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  * 
  * @author cody
  */
-public class GenericDecryptor implements Decryptor {
+public class GenericEncryptionUtility implements Decryptor, Encryptor {
     
     private final Cipher cipher;
     private final String keyMode;
+    private final EncryptionMode encryptionMode;
     
-    public GenericDecryptor(final String algorithm) {
+    public GenericEncryptionUtility(final String algorithm, final EncryptionMode encryptionMode) {
         try {
             this.cipher = Cipher.getInstance(algorithm);
         } catch (NoSuchAlgorithmException|NoSuchPaddingException ex) {
@@ -32,33 +35,50 @@ public class GenericDecryptor implements Decryptor {
                     + ". Exception is: " + ex.getMessage());
         }
         this.keyMode = algorithm.split("/")[0];
+        this.encryptionMode = encryptionMode;
+    }
+    
+    @Override
+    public byte[] decrypt(final byte[] ciphertext, final String key) {
+                System.out.println("decrypting size = " + ciphertext.length);
+
+        return encryptOrDecrypt(ciphertext, key, new byte[16]);
     }
 
-    @Override
-    public String decrypt(final byte[] ciphertext, final String key) {
+    public byte[] encryptOrDecrypt(final byte[] ciphertext, final String key, final byte[] iv) {
         
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), keyMode);
         try {
             if (isCBC()) {
-                cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
+                System.out.println("It's CBC!");
+                cipher.init(encryptionMode.getEncryptionMode(), secretKey, new IvParameterSpec(iv));
             } else {
-                cipher.init(Cipher.DECRYPT_MODE, secretKey);
+                cipher.init(encryptionMode.getEncryptionMode(), secretKey);
             }
         } catch (InvalidKeyException|InvalidAlgorithmParameterException ex) {
+            System.out.println(ex);
             throw new IllegalArgumentException("Unable to initialize cipher with key  " + ReflectionToStringBuilder.toString(key) 
                     + " Exception is " + ex.getMessage());
         }
         try {
-            byte[] decrypted = cipher.doFinal(ciphertext);
-            return new String(decrypted);
+            return cipher.doFinal(ciphertext);
         } catch (IllegalBlockSizeException|BadPaddingException ex) {
-            throw new IllegalArgumentException("Unable to decrypt cipher text " + new String(ciphertext) 
+            System.out.println("size = " + ciphertext.length);
+            System.out.println(ex);
+            ex.printStackTrace();
+            throw new IllegalArgumentException("Unable to encrypt/decrypt cipher text " //+ new String(ciphertext) 
                     + " with key " + key + " Exception is " + ex.getMessage());
         }
     }
     
     private boolean isCBC() {
         return cipher.getAlgorithm().contains("CBC");
+    }
+
+    @Override
+    public byte[] encrypt(String plaintext, String key, String iv) {
+        System.out.println("encrypting size = " + plaintext.getBytes().length + " text = " + plaintext);
+        return encryptOrDecrypt(plaintext.getBytes(), key, iv.getBytes());
     }
     
 }

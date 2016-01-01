@@ -11,7 +11,7 @@ import com.czwief.crypto.one.decryption.Decryptor;
 public class DefaultDecryptor implements Decryptor {
 
     @Override
-    public String decrypt(byte[] ciphertext, String key) {
+    public byte[] decrypt(byte[] ciphertext, String key) {
         final byte[] keyAsBytes = key.getBytes();
         final StringBuilder sb = new StringBuilder();
         
@@ -20,6 +20,6 @@ public class DefaultDecryptor implements Decryptor {
             sb.append(new String(new byte[]{singleByte}));
         }
         
-        return sb.toString();
+        return sb.toString().getBytes();
     }
 }

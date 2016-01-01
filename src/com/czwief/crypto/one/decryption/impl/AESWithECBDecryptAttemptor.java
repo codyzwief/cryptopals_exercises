@@ -51,6 +51,6 @@ public class AESWithECBDecryptAttemptor implements DecryptAttemptor {
         }
         
         //5. Decrypt it!
-        return decryptor.decrypt(ciphertext, sb.toString());
+        return new String(decryptor.decrypt(ciphertext, sb.toString()));
     }
 }

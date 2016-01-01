@@ -12,7 +12,7 @@ import javax.xml.bind.DatatypeConverter;
 public class DefaultEncryptor implements Encryptor {
 
     @Override
-    public String encrypt(String plaintext, String key, String iv) {
+    public byte[] encrypt(String plaintext, String key, String iv) {
         final byte[] textHexBytes = plaintext.getBytes();
         final byte[] keyHexBytes = key.getBytes();
         final StringBuilder sb = new StringBuilder();
@@ -22,7 +22,7 @@ public class DefaultEncryptor implements Encryptor {
             sb.append(DatatypeConverter.printHexBinary(new byte[]{singleByte}));
         }
         
-        return sb.toString().toLowerCase();
+        return sb.toString().toLowerCase().getBytes();
         
     }
     
