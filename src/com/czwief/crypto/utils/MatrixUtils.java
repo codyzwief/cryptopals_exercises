@@ -1,5 +1,7 @@
 package com.czwief.crypto.utils;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  *
  * @author cody
@@ -20,6 +22,18 @@ public class MatrixUtils {
             }
         }
         return retVal;
+    }
+    
+    public static byte[][] chopIntoBlocks(final byte[] input, final int blockSize) {
+        Validate.isTrue(input.length % blockSize == 0, "Input of size " + input.length 
+                + " not divisible by " + blockSize);
+        
+        final byte[][] retval = new byte[input.length / blockSize][blockSize];
+        for (int i = 0; i < input.length; i++) {
+            retval[i / blockSize][i % blockSize] = input[i];
+        }
+        
+        return retval;
     }
     
 }

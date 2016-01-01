@@ -76,7 +76,7 @@ public class XorUtils {
     }
     
     
-    private static byte[] xorBytes(byte[] first, byte[] second, boolean shouldWrap) {
+    public static byte[] xorBytes(byte[] first, byte[] second, boolean shouldWrap) {
         byte[] longerPiece = first.length > second.length ? first : second;
         byte[] shorterPiece = first.length > second.length ? second : first;
         

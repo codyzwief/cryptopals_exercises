@@ -40,8 +40,6 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
     
     @Override
     public byte[] decrypt(final byte[] ciphertext, final String key) {
-                System.out.println("decrypting size = " + ciphertext.length);
-
         return encryptOrDecrypt(ciphertext, key, new byte[16]);
     }
 
@@ -50,23 +48,18 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), keyMode);
         try {
             if (isCBC()) {
-                System.out.println("It's CBC!");
                 cipher.init(encryptionMode.getEncryptionMode(), secretKey, new IvParameterSpec(iv));
             } else {
                 cipher.init(encryptionMode.getEncryptionMode(), secretKey);
             }
         } catch (InvalidKeyException|InvalidAlgorithmParameterException ex) {
-            System.out.println(ex);
             throw new IllegalArgumentException("Unable to initialize cipher with key  " + ReflectionToStringBuilder.toString(key) 
                     + " Exception is " + ex.getMessage());
         }
         try {
             return cipher.doFinal(ciphertext);
         } catch (IllegalBlockSizeException|BadPaddingException ex) {
-            System.out.println("size = " + ciphertext.length);
-            System.out.println(ex);
-            ex.printStackTrace();
-            throw new IllegalArgumentException("Unable to encrypt/decrypt cipher text " //+ new String(ciphertext) 
+            throw new IllegalArgumentException("Unable to encrypt/decrypt cipher text "
                     + " with key " + key + " Exception is " + ex.getMessage());
         }
     }
@@ -77,8 +70,7 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
 
     @Override
     public byte[] encrypt(String plaintext, String key, String iv) {
-        System.out.println("encrypting size = " + plaintext.getBytes().length + " text = " + plaintext);
-        return encryptOrDecrypt(plaintext.getBytes(), key, iv.getBytes());
+        return encryptOrDecrypt(plaintext.getBytes(), key, iv == null? null : iv.getBytes());
     }
     
 }

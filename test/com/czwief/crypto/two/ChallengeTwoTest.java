@@ -4,6 +4,7 @@ import com.czwief.crypto.one.ChallengeOneAnswers;
 import com.czwief.crypto.one.decryption.Decryptor;
 import com.czwief.crypto.one.encryption.GenericEncryptionDecryptionUtility;
 import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.one.encryption.impl.HandrolledCBCEncryptor;
 import com.czwief.crypto.two.padding.PKCS7Padder;
 import com.czwief.crypto.utils.Base64Utils;
 import com.czwief.crypto.utils.EncryptionMode;
@@ -42,11 +43,23 @@ public class ChallengeTwoTest {
         Assert.assertEquals("YELLOW SUBMARINE\u0004\u0004\u0004\u0004",
                 new String(PKCS7Padder.PKCS7Pad(key, 20)));
         
+        Assert.assertEquals("YELLOW SUBMARINE\u0004\u0004\u0004\u0004",
+                new String(PKCS7Padder.PKCS7Pad(key, 5)));
+        
         Assert.assertEquals("YELLOW SUBMARINE\u0002\u0002",
                 new String(PKCS7Padder.PKCS7Pad(key, 18)));
         
         Assert.assertEquals("YELLOW SUBMARINE",
                 new String(PKCS7Padder.PKCS7Pad(key, 16)));
+        
+        Assert.assertEquals("YELLOW SUBMARINE",
+                new String(PKCS7Padder.PKCS7Pad(key, 2)));
+        
+        Assert.assertEquals("YELLOW SUBMARINE",
+                new String(PKCS7Padder.PKCS7Pad(key, 4)));
+        
+        Assert.assertEquals("YELLOW SUBMARINE\u0002\u0002",
+                new String(PKCS7Padder.PKCS7Pad(key, 3)));
     }
     
     /**
@@ -96,14 +109,29 @@ public class ChallengeTwoTest {
         String plainText = ChallengeOneAnswers.ONE_POINT_SIX;
         String IV = new String(new byte[16]);
         Encryptor cbcEncryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.ENCRYPT);
+        Encryptor handrolledCbcEncryptor = new HandrolledCBCEncryptor();
         Decryptor cbcDecryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
         String key = "YELLOW SUBMARINE";
         
         byte[] encrypted = cbcEncryptor.encrypt(plainText, key, IV);
-        //String encrypted = cbcEncryptor.encrypt(plainText, key, IV);
+        byte[] handrolledEncrypted = handrolledCbcEncryptor.encrypt(plainText, key, IV);
+        
+        System.err.println("=============================================");
+        System.err.println("ENCRYPTED = " + new String(encrypted));
+        System.err.println("=============================================");
+        System.err.println("HANDROLLED= " + new String(handrolledEncrypted));
+        System.err.println("=============================================");
+
+        
+        //Assert.assertEquals("Your handrolled encryption doesn't match the java implementation", 
+        //        new String(encrypted), new String(handrolledEncrypted));
+        
         byte[] decrypted = cbcDecryptor.decrypt(encrypted, key);
-        //String decrypted = cbcDecryptor.decrypt(PKCS7Padder.PKCS7Pad(encrypted.getBytes(), 16), new String(PKCS7Padder.PKCS7Pad(key.getBytes(), 16)));
+        byte[] decryptedFromHandrolled = cbcDecryptor.decrypt(handrolledEncrypted, key);
+        
+        System.err.println("HANDROLLED DECRYPTED = " + new String(decryptedFromHandrolled));
         
         Assert.assertEquals(plainText, new String(decrypted));
+        Assert.assertEquals(plainText, new String(decryptedFromHandrolled));
     }
 }
