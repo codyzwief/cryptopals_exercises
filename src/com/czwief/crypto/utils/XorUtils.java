@@ -1,6 +1,6 @@
 package com.czwief.crypto.utils;
 
-import com.czwief.crypto.one.scorer.StringScorer;
+import com.czwief.crypto.one.strings.StringScorer;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.codec.DecoderException;

@@ -8,7 +8,7 @@ import com.czwief.crypto.one.decryption.Decryptor;
  * 
  * @author cody
  */
-public class DefaultDecryptor implements Decryptor {
+public class CrappyXoringPartOneDecryptor implements Decryptor {
 
     @Override
     public byte[] decrypt(byte[] ciphertext, String key) {

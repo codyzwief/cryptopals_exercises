@@ -1,4 +1,4 @@
-package com.czwief.crypto.one.decryption.impl;
+package com.czwief.crypto.one.encryption;
 
 import com.czwief.crypto.one.decryption.Decryptor;
 import com.czwief.crypto.one.encryption.Encryptor;
@@ -21,13 +21,13 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  * 
  * @author cody
  */
-public class GenericEncryptionUtility implements Decryptor, Encryptor {
+public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor {
     
     private final Cipher cipher;
     private final String keyMode;
     private final EncryptionMode encryptionMode;
     
-    public GenericEncryptionUtility(final String algorithm, final EncryptionMode encryptionMode) {
+    public GenericEncryptionDecryptionUtility(final String algorithm, final EncryptionMode encryptionMode) {
         try {
             this.cipher = Cipher.getInstance(algorithm);
         } catch (NoSuchAlgorithmException|NoSuchPaddingException ex) {

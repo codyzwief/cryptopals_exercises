@@ -1,4 +1,4 @@
-package com.czwief.crypto.one.scorer;
+package com.czwief.crypto.one.strings;
 
 import java.util.HashMap;
 import java.util.Map;

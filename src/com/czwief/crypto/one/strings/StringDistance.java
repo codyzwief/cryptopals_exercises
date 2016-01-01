@@ -1,4 +1,4 @@
-package com.czwief.crypto.one.distance;
+package com.czwief.crypto.one.strings;
 
 import junit.framework.Assert;
 

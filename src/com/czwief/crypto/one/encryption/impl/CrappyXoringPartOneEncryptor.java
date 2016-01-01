@@ -9,7 +9,7 @@ import javax.xml.bind.DatatypeConverter;
  * 
  * @author cody
  */
-public class DefaultEncryptor implements Encryptor {
+public class CrappyXoringPartOneEncryptor implements Encryptor {
 
     @Override
     public byte[] encrypt(String plaintext, String key, String iv) {

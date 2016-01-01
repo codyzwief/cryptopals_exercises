@@ -1,17 +1,23 @@
 package com.czwief.crypto.one.decryption.impl;
 
-import com.czwief.crypto.one.decryption.*;
-import com.czwief.crypto.one.distance.KeyLengthFinder;
+import com.czwief.crypto.one.decryption.DecryptAttemptor;
+import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.one.strings.KeyLengthFinder;
 import com.czwief.crypto.utils.MatrixUtils;
 import com.czwief.crypto.utils.XorUtils;
-import org.apache.commons.codec.DecoderException;
 
 /**
  * Attempt to decrypt a given piece of ciphertext.
  * 
  * @author cody
  */
-public class DefaultDecryptAttemptor implements DecryptAttemptor {
+public class DecryptAttemptorImpl implements DecryptAttemptor {
+    
+    private final Decryptor decryptor;
+    
+    public DecryptAttemptorImpl(final Decryptor decryptor) {
+        this.decryptor = decryptor;
+    }
 
     /**
      * Decrypt the ciphertext as specified in 1.6. This ignores the key.
@@ -24,7 +30,7 @@ public class DefaultDecryptAttemptor implements DecryptAttemptor {
      * @throws DecoderException 
      */
     @Override
-    public String attemptDecryption(final byte[] ciphertext, final Decryptor decryptor) {
+    public String attemptDecryption(final byte[] ciphertext) {
         
         //1. Since we're ignoring the key, attempt to figure out the key.
         //   Do this by determining a keysize

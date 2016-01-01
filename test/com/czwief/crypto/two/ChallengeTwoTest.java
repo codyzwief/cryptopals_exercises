@@ -2,7 +2,7 @@ package com.czwief.crypto.two;
 
 import com.czwief.crypto.one.ChallengeOneAnswers;
 import com.czwief.crypto.one.decryption.Decryptor;
-import com.czwief.crypto.one.decryption.impl.GenericEncryptionUtility;
+import com.czwief.crypto.one.encryption.GenericEncryptionDecryptionUtility;
 import com.czwief.crypto.one.encryption.Encryptor;
 import com.czwief.crypto.two.padding.PKCS7Padder;
 import com.czwief.crypto.utils.Base64Utils;
@@ -70,7 +70,7 @@ public class ChallengeTwoTest {
      */
     @Test
     public void TwoPointTwoTest() throws Exception {
-        Decryptor cbcDecryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
+        Decryptor cbcDecryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
         String key = "YELLOW SUBMARINE";
         BufferedReader br = new BufferedReader(new FileReader("static-content/two/10.txt"));
         String line;
@@ -95,8 +95,8 @@ public class ChallengeTwoTest {
     public void TwoPointTwoTest_TestEncryptionAndDecryption() throws Exception {
         String plainText = ChallengeOneAnswers.ONE_POINT_SIX;
         String IV = new String(new byte[16]);
-        Encryptor cbcEncryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.ENCRYPT);
-        Decryptor cbcDecryptor = new GenericEncryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
+        Encryptor cbcEncryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.ENCRYPT);
+        Decryptor cbcDecryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
         String key = "YELLOW SUBMARINE";
         
         byte[] encrypted = cbcEncryptor.encrypt(plainText, key, IV);

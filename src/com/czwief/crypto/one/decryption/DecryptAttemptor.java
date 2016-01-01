@@ -10,12 +10,12 @@ import org.apache.commons.codec.DecoderException;
 public interface DecryptAttemptor {
 
     /**
-     * Attempt to decrypt the ciphertext with a given decryptor.
+     * Attempt to decrypt the ciphertext.
      * 
      * @param ciphertext
      * @param key
      * @return
      * @throws DecoderException 
      */
-    public String attemptDecryption(final byte[] ciphertext, final Decryptor decryptor);
+    public String attemptDecryption(final byte[] ciphertext);
 }
