@@ -1,4 +1,4 @@
-package com.czwief.crypto.two.padding;
+package com.czwief.crypto.padding;
 
 import java.util.Arrays;
 

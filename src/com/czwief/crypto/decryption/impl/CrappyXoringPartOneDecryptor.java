@@ -1,6 +1,6 @@
-package com.czwief.crypto.one.decryption.impl;
+package com.czwief.crypto.decryption.impl;
 
-import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.decryption.Decryptor;
 
 /**
  * A simple decryption implementation that simply XORs the cipher text

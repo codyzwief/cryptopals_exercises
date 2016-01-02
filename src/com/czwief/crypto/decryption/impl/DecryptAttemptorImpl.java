@@ -1,7 +1,7 @@
-package com.czwief.crypto.one.decryption.impl;
+package com.czwief.crypto.decryption.impl;
 
-import com.czwief.crypto.one.decryption.DecryptAttemptor;
-import com.czwief.crypto.one.decryption.Decryptor;
+import com.czwief.crypto.decryption.DecryptAttemptor;
+import com.czwief.crypto.decryption.Decryptor;
 import com.czwief.crypto.one.strings.KeyLengthFinder;
 import com.czwief.crypto.utils.MatrixUtils;
 import com.czwief.crypto.utils.XorUtils;

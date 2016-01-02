@@ -1,4 +1,4 @@
-package com.czwief.crypto.one.decryption;
+package com.czwief.crypto.decryption;
 
 /**
  *

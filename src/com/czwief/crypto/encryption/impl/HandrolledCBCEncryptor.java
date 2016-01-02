@@ -1,8 +1,8 @@
-package com.czwief.crypto.one.encryption.impl;
+package com.czwief.crypto.encryption.impl;
 
-import com.czwief.crypto.one.encryption.Encryptor;
-import com.czwief.crypto.one.encryption.GenericEncryptionDecryptionUtility;
-import com.czwief.crypto.two.padding.PKCS7Padder;
+import com.czwief.crypto.encryption.Encryptor;
+import com.czwief.crypto.encryption.GenericEncryptionDecryptionUtility;
+import com.czwief.crypto.padding.PKCS7Padder;
 import com.czwief.crypto.utils.EncryptionMode;
 import com.czwief.crypto.utils.MatrixUtils;
 import com.czwief.crypto.utils.XorUtils;

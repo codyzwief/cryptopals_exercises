@@ -1,8 +1,9 @@
-package com.czwief.crypto.one.encryption;
+package com.czwief.crypto.encryption;
 
-import com.czwief.crypto.one.decryption.Decryptor;
-import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.decryption.Decryptor;
+import com.czwief.crypto.encryption.Encryptor;
 import com.czwief.crypto.utils.EncryptionMode;
+import com.czwief.crypto.utils.KeyGenerationUtils;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -72,5 +73,4 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
     public byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {
         return encryptOrDecrypt(plaintext, key, iv);
     }
-    
 }

@@ -1,6 +1,6 @@
-package com.czwief.crypto.one.encryption.impl;
+package com.czwief.crypto.encryption.impl;
 
-import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.encryption.Encryptor;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -23,7 +23,5 @@ public class CrappyXoringPartOneEncryptor implements Encryptor {
         }
         
         return sb.toString().toLowerCase().getBytes();
-        
     }
-    
 }

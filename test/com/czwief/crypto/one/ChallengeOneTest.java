@@ -1,13 +1,13 @@
 package com.czwief.crypto.one;
 
-import com.czwief.crypto.one.decryption.DecryptAttemptor;
-import com.czwief.crypto.one.decryption.Decryptor;
-import com.czwief.crypto.one.encryption.GenericEncryptionDecryptionUtility;
-import com.czwief.crypto.one.decryption.impl.DecryptAttemptorImpl;
-import com.czwief.crypto.one.decryption.impl.CrappyXoringPartOneDecryptor;
+import com.czwief.crypto.decryption.DecryptAttemptor;
+import com.czwief.crypto.decryption.Decryptor;
+import com.czwief.crypto.encryption.GenericEncryptionDecryptionUtility;
+import com.czwief.crypto.decryption.impl.DecryptAttemptorImpl;
+import com.czwief.crypto.decryption.impl.CrappyXoringPartOneDecryptor;
 import com.czwief.crypto.one.strings.StringDistance;
-import com.czwief.crypto.one.encryption.impl.CrappyXoringPartOneEncryptor;
-import com.czwief.crypto.one.encryption.Encryptor;
+import com.czwief.crypto.encryption.impl.CrappyXoringPartOneEncryptor;
+import com.czwief.crypto.encryption.Encryptor;
 import com.czwief.crypto.utils.Base64Utils;
 import com.czwief.crypto.utils.XorUtils;
 import com.czwief.crypto.one.strings.StringScorer;

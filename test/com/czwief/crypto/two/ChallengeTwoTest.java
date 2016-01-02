@@ -1,15 +1,17 @@
 package com.czwief.crypto.two;
 
 import com.czwief.crypto.one.ChallengeOneAnswers;
-import com.czwief.crypto.one.decryption.Decryptor;
-import com.czwief.crypto.one.encryption.GenericEncryptionDecryptionUtility;
-import com.czwief.crypto.one.encryption.Encryptor;
-import com.czwief.crypto.one.encryption.impl.HandrolledCBCEncryptor;
-import com.czwief.crypto.two.padding.PKCS7Padder;
+import com.czwief.crypto.decryption.Decryptor;
+import com.czwief.crypto.encryption.GenericEncryptionDecryptionUtility;
+import com.czwief.crypto.encryption.Encryptor;
+import com.czwief.crypto.encryption.impl.HandrolledCBCEncryptor;
+import com.czwief.crypto.padding.PKCS7Padder;
 import com.czwief.crypto.utils.Base64Utils;
 import com.czwief.crypto.utils.EncryptionMode;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -124,5 +126,36 @@ public class ChallengeTwoTest {
                 
         Assert.assertEquals(plainText, new String(decrypted));
         Assert.assertEquals(plainText, new String(decryptedFromHandrolled));
+    }
+    
+    /**
+     * http://cryptopals.com/sets/2/challenges/12/
+     * 
+     * @throws Exception 
+     */
+    @Test
+    public void TwoPointTenTest() throws Exception {
+        byte[] key = "YELLOW SUBMARINE".getBytes();
+        byte[] plainText = PKCS7Padder.PKCS7Pad((ChallengeOneAnswers.ONE_POINT_SIX + Base64Utils.decode(ChallengeOneAnswers.TWO_POINT_TWELVE)).getBytes(), 16);
+        Encryptor ecbEncryptor = new GenericEncryptionDecryptionUtility("AES/ECB/PKCS5Padding", EncryptionMode.ENCRYPT);
+        
+        
+        String inputBlock = "AAAAAAAAAAAAAAA";
+        final Map<Byte, Character> characterMap = new HashMap<>();
+        for (int i = 0; i < 255; i++) {
+            final String blockToUse = inputBlock + String.valueOf((char) i);
+            byte[] encrypted = ecbEncryptor.encrypt(blockToUse.getBytes(), key, null);
+            characterMap.put(encrypted[15], (char) i);
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        byte[] fullEncrypted = ecbEncryptor.encrypt(plainText, key, null);
+        for (int i = 0; i < ChallengeOneAnswers.TWO_POINT_TWELVE.length(); i++) {
+            final String blockToUse = inputBlock + String.valueOf((char) fullEncrypted[i]);
+            final byte[] encrypted = ecbEncryptor.encrypt(blockToUse.getBytes(), key, null);
+            sb.append(characterMap.get(encrypted[15]));
+        }
+        
+        System.out.println(sb.toString());
     }
 }
