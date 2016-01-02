@@ -162,7 +162,7 @@ public class ChallengeOneTest {
         final String KEY = "ICE";
         final String TEXT = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
         Encryptor encryptor = new CrappyXoringPartOneEncryptor();
-        final String result = new String(encryptor.encrypt(TEXT, KEY, null));
+        final String result = new String(encryptor.encrypt(TEXT.getBytes(), KEY.getBytes(), null));
         
         Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_FIVE, result);
     }
@@ -217,8 +217,8 @@ public class ChallengeOneTest {
             sb.append(line);
         }
         
-        String result = new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE"));
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE")));
+        String result = new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE".getBytes()));
+        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE".getBytes())));
     }
     
     /**

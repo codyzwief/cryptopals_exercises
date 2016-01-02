@@ -16,15 +16,15 @@ import org.apache.commons.lang3.Validate;
 public class HandrolledCBCEncryptor implements Encryptor {
     
     private static final Encryptor ecbEncryptor = 
-            new GenericEncryptionDecryptionUtility("AES/ECB/PKCS5Padding", EncryptionMode.ENCRYPT);
+            new GenericEncryptionDecryptionUtility("AES/ECB/NoPadding", EncryptionMode.ENCRYPT);
 
     @Override
-    public byte[] encrypt(final String plaintext, final String key, final String iv) {
-        final byte[] keyBytes = key.getBytes();
-        final byte[] ivBytes = iv.getBytes();
+    public byte[] encrypt(final byte[] plaintext, final byte[] key, final byte[] iv) {
+        final byte[] keyBytes = key;
+        final byte[] ivBytes = iv;
         final int blockSize = keyBytes.length;
         Validate.isTrue(keyBytes.length == ivBytes.length, "Key and IV need to be same length.");
-        final byte[] textBytes = PKCS7Padder.PKCS7Pad(plaintext.getBytes(), blockSize);
+        final byte[] textBytes = PKCS7Padder.PKCS7Pad(plaintext, blockSize);
         
         final byte[] retval = new byte[textBytes.length];
         final byte[][] blockedTextBytes = MatrixUtils.chopIntoBlocks(textBytes, blockSize);
@@ -33,7 +33,7 @@ public class HandrolledCBCEncryptor implements Encryptor {
         
         for (int i = 0; i < blockedTextBytes.length; i++) {
             byte[] toEncrypt = XorUtils.xorBytes(blockedTextBytes[i], tempXorMask, false);
-            byte[] encrypted = ecbEncryptor.encrypt(new String(toEncrypt), key, null);
+            byte[] encrypted = ecbEncryptor.encrypt(toEncrypt, key, null);
             tempXorMask = encrypted;
             System.arraycopy(encrypted, 0, retval, i * blockSize, blockSize);
         }

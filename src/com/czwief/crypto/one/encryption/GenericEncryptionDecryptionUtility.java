@@ -39,13 +39,13 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
     }
     
     @Override
-    public byte[] decrypt(final byte[] ciphertext, final String key) {
+    public byte[] decrypt(final byte[] ciphertext, final byte[] key) {
         return encryptOrDecrypt(ciphertext, key, new byte[16]);
     }
 
-    public byte[] encryptOrDecrypt(final byte[] ciphertext, final String key, final byte[] iv) {
+    public byte[] encryptOrDecrypt(final byte[] ciphertext, final byte[] key, final byte[] iv) {
         
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), keyMode);
+        SecretKeySpec secretKey = new SecretKeySpec(key, keyMode);
         try {
             if (isCBC()) {
                 cipher.init(encryptionMode.getEncryptionMode(), secretKey, new IvParameterSpec(iv));
@@ -69,8 +69,8 @@ public class GenericEncryptionDecryptionUtility implements Decryptor, Encryptor 
     }
 
     @Override
-    public byte[] encrypt(String plaintext, String key, String iv) {
-        return encryptOrDecrypt(plaintext.getBytes(), key, iv == null? null : iv.getBytes());
+    public byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {
+        return encryptOrDecrypt(plaintext, key, iv);
     }
     
 }

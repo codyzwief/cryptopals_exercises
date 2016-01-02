@@ -57,6 +57,6 @@ public class DecryptAttemptorImpl implements DecryptAttemptor {
         }
         
         //5. Decrypt it!
-        return new String(decryptor.decrypt(ciphertext, sb.toString()));
+        return new String(decryptor.decrypt(ciphertext, sb.toString().getBytes()));
     }
 }

@@ -84,7 +84,7 @@ public class ChallengeTwoTest {
     @Test
     public void TwoPointTwoTest() throws Exception {
         Decryptor cbcDecryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
-        String key = "YELLOW SUBMARINE";
+        byte[] key = "YELLOW SUBMARINE".getBytes();
         BufferedReader br = new BufferedReader(new FileReader("static-content/two/10.txt"));
         String line;
         StringBuilder sb = new StringBuilder();
@@ -107,30 +107,21 @@ public class ChallengeTwoTest {
     @Test
     public void TwoPointTwoTest_TestEncryptionAndDecryption() throws Exception {
         String plainText = ChallengeOneAnswers.ONE_POINT_SIX;
-        String IV = new String(new byte[16]);
+        byte[] IV = new byte[16];
         Encryptor cbcEncryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.ENCRYPT);
         Encryptor handrolledCbcEncryptor = new HandrolledCBCEncryptor();
         Decryptor cbcDecryptor = new GenericEncryptionDecryptionUtility("AES/CBC/PKCS5Padding", EncryptionMode.DECRYPT);
-        String key = "YELLOW SUBMARINE";
+        byte[] key = "YELLOW SUBMARINE".getBytes();
         
-        byte[] encrypted = cbcEncryptor.encrypt(plainText, key, IV);
-        byte[] handrolledEncrypted = handrolledCbcEncryptor.encrypt(plainText, key, IV);
+        byte[] encrypted = cbcEncryptor.encrypt(plainText.getBytes(), key, IV);
+        byte[] handrolledEncrypted = handrolledCbcEncryptor.encrypt(plainText.getBytes(), key, IV);
         
-        System.err.println("=============================================");
-        System.err.println("ENCRYPTED = " + new String(encrypted));
-        System.err.println("=============================================");
-        System.err.println("HANDROLLED= " + new String(handrolledEncrypted));
-        System.err.println("=============================================");
-
-        
-        //Assert.assertEquals("Your handrolled encryption doesn't match the java implementation", 
-        //        new String(encrypted), new String(handrolledEncrypted));
+        Assert.assertEquals("Your handrolled encryption doesn't match the java implementation", 
+                new String(encrypted), new String(handrolledEncrypted));
         
         byte[] decrypted = cbcDecryptor.decrypt(encrypted, key);
         byte[] decryptedFromHandrolled = cbcDecryptor.decrypt(handrolledEncrypted, key);
-        
-        System.err.println("HANDROLLED DECRYPTED = " + new String(decryptedFromHandrolled));
-        
+                
         Assert.assertEquals(plainText, new String(decrypted));
         Assert.assertEquals(plainText, new String(decryptedFromHandrolled));
     }

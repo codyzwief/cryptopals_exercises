@@ -13,5 +13,5 @@ public interface Decryptor {
      * @param key TODO refactor everything to be just byte arrays
      * @return 
      */
-    byte[] decrypt(byte[] ciphertext, String key); 
+    byte[] decrypt(byte[] ciphertext, byte[] key); 
 }

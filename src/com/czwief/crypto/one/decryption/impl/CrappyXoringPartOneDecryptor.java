@@ -11,12 +11,11 @@ import com.czwief.crypto.one.decryption.Decryptor;
 public class CrappyXoringPartOneDecryptor implements Decryptor {
 
     @Override
-    public byte[] decrypt(byte[] ciphertext, String key) {
-        final byte[] keyAsBytes = key.getBytes();
+    public byte[] decrypt(byte[] ciphertext, byte[] key) {
         final StringBuilder sb = new StringBuilder();
         
         for (int i = 0; i < ciphertext.length; i++) {
-            byte singleByte = (byte) (ciphertext[i] ^ keyAsBytes[i % keyAsBytes.length]);
+            byte singleByte = (byte) (ciphertext[i] ^ key[i % key.length]);
             sb.append(new String(new byte[]{singleByte}));
         }
         

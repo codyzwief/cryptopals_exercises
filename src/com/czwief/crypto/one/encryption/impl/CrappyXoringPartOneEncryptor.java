@@ -12,9 +12,9 @@ import javax.xml.bind.DatatypeConverter;
 public class CrappyXoringPartOneEncryptor implements Encryptor {
 
     @Override
-    public byte[] encrypt(String plaintext, String key, String iv) {
-        final byte[] textHexBytes = plaintext.getBytes();
-        final byte[] keyHexBytes = key.getBytes();
+    public byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {
+        final byte[] textHexBytes = plaintext;
+        final byte[] keyHexBytes = key;
         final StringBuilder sb = new StringBuilder();
         
         for (int i = 0; i < textHexBytes.length; i++) {
