@@ -164,7 +164,7 @@ public class ChallengeOneTest {
         Encryptor encryptor = new CrappyXoringPartOneEncryptor();
         final String result = new String(encryptor.encrypt(TEXT.getBytes(), KEY.getBytes(), null));
         
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_FIVE, result);
+        Assert.assertEquals(ChallengeAnswers.ONE_POINT_FIVE, result);
     }
     
     @Test
@@ -196,7 +196,7 @@ public class ChallengeOneTest {
         
         final byte[] cipherTextData = Base64Utils.decode(sb.toString());
         
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SIX, 
+        Assert.assertEquals(ChallengeAnswers.ONE_POINT_SIX, 
                 defaultDecryptAttemptor.attemptDecryption(cipherTextData));
     }
     
@@ -218,7 +218,7 @@ public class ChallengeOneTest {
         }
         
         String result = new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE".getBytes()));
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_SEVEN, new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE".getBytes())));
+        Assert.assertEquals(ChallengeAnswers.ONE_POINT_SEVEN, new String(aesDecryptor.decrypt(Base64.decode(sb.toString()), "YELLOW SUBMARINE".getBytes())));
     }
     
     /**
@@ -238,6 +238,6 @@ public class ChallengeOneTest {
         while ((line = br.readLine()) != null) {
             hexStrings.add(line);
         }
-        Assert.assertEquals(ChallengeOneAnswers.ONE_POINT_EIGHT, XorUtils.determineAESWithECB(hexStrings, 16));
+        Assert.assertEquals(ChallengeAnswers.ONE_POINT_EIGHT, XorUtils.determineAESWithECB(hexStrings, 16));
     }
 }

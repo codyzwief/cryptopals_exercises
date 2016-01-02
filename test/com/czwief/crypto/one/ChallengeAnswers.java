@@ -1,10 +1,12 @@
 package com.czwief.crypto.one;
 
+import com.czwief.crypto.utils.Base64Utils;
+
 /**
  *
  * @author cody
  */
-public class ChallengeOneAnswers {
+public class ChallengeAnswers {
     
     public static final String ONE_POINT_FIVE = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
                  + "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
@@ -89,4 +91,6 @@ public class ChallengeOneAnswers {
             "aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq\n" +
             "dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg\n" +
             "YnkK";
+    
+    public static final String TWO_POINT_TWELVE_ANSWER = new String(Base64Utils.decode(TWO_POINT_TWELVE));
 }
