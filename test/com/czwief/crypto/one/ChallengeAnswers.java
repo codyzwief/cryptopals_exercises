@@ -1,5 +1,7 @@
 package com.czwief.crypto.one;
 
+import com.czwief.crypto.encryption.impl.RandomStringAppendingEncryptor;
+import com.czwief.crypto.two.oracle.ECBCBCDetectionOracle;
 import com.czwief.crypto.utils.Base64Utils;
 
 /**
@@ -87,10 +89,5 @@ public class ChallengeAnswers {
             + "08649af70dc06f4fd5d2d69c744cd28397a93eab8d6aecd566489154789a6b0308649af70dc06f4fd5d2d69c744cd283d40" 
             + "3180c98c8f6db1f2a3f9c4040deb0ab51b29933f2c123c58386b06fba186a";
     
-    public static final String TWO_POINT_TWELVE = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg\n" +
-            "aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq\n" +
-            "dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg\n" +
-            "YnkK";
-    
-    public static final String TWO_POINT_TWELVE_ANSWER = new String(Base64Utils.decode(TWO_POINT_TWELVE));
+    public static final String TWO_POINT_TWELVE_ANSWER = new String(RandomStringAppendingEncryptor.TWO_POINT_TWELVE);
 }

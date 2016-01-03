@@ -6,6 +6,7 @@ import com.czwief.crypto.encryption.GenericEncryptionDecryptionUtility;
 import com.czwief.crypto.encryption.Encryptor;
 import com.czwief.crypto.encryption.impl.HandrolledCBCEncryptor;
 import com.czwief.crypto.padding.PKCS7Padder;
+import com.czwief.crypto.two.oracle.ECBCBCDetectionOracle;
 import com.czwief.crypto.utils.Base64Utils;
 import com.czwief.crypto.utils.EncryptionMode;
 import java.io.BufferedReader;
@@ -135,28 +136,14 @@ public class ChallengeTwoTest {
      * @throws Exception 
      */
     @Test
-    public void TwoPointTenTest() throws Exception {
+    public void TwoPointTwelveTest() throws Exception {
         //Even though we aren't supposed to know the key or the 'unknown string', this is just a test,
         // so we pretend we won't know it after this initialization.
-        byte[] key = "YELLOW SUBMARINE".getBytes();
-        final byte[] inputBlock = "AAAAAAAAAAAAAAA".getBytes();
-        byte[] plainText = ArrayUtils.addAll(inputBlock, Base64Utils.decode(ChallengeAnswers.TWO_POINT_TWELVE));
-        Encryptor ecbEncryptor = new GenericEncryptionDecryptionUtility("AES/ECB/PKCS5Padding", EncryptionMode.ENCRYPT);
+        final ECBCBCDetectionOracle test = new ECBCBCDetectionOracle();
+        Assert.assertEquals(16, test.determineBlockSize());
         
-        final Map<String, Character> characterMap = new HashMap<>();
-        for (int i = 0; i < 127; i++) {
-            final byte[] blockToUse = ArrayUtils.addAll(inputBlock, new byte[] {(byte)i});
-            byte[] encrypted = ecbEncryptor.encrypt(blockToUse, key, null);
-            characterMap.put(new String(encrypted), (char) i);
-        }
-        
-        final StringBuilder sb = new StringBuilder();
-        for (int i = inputBlock.length; i < plainText.length; i++) {
-            final byte[] blockToUse = ArrayUtils.addAll(inputBlock, new byte[] {plainText[i]});
-            final byte[] encrypted = ecbEncryptor.encrypt(blockToUse, key, null);
-            sb.append(characterMap.get(new String(encrypted)));
-        }
-        
-        Assert.assertEquals(ChallengeAnswers.TWO_POINT_TWELVE_ANSWER, sb.toString());
+        final String result = test.decryptAppendedString();
+        System.err.println(result);
+        Assert.assertTrue(result.startsWith(ChallengeAnswers.TWO_POINT_TWELVE_ANSWER));
     }
 }
